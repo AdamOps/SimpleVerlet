@@ -102,3 +102,7 @@ void Sphere::update(sf::RenderWindow *window) {
 
 	shape.move(dx, dy);
 }
+
+void Sphere::constraint(sf::Vector2f vertOnePos, sf::Vector2f vertTwoPos) {
+
+}
