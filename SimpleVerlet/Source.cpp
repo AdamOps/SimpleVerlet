@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 #include "Sphere.h"
 
@@ -15,17 +16,16 @@ int main()
 
     std::vector<Sphere> objectSet;
 
-    int randGenNew;
+    srand(1);
 
     sf::Clock clock;
 
     while (window.isOpen())
     {
         sf::Time ElapsedTime = clock.getElapsedTime();
-        if (ElapsedTime.asMilliseconds() > 100) {
+        sf::Time drawTime = clock.getElapsedTime();
+        if (ElapsedTime.asMilliseconds() > 500 && objectSet.size() < 5) {
             objectSet.push_back(Sphere());
-
-            clock.restart();
         }
 
         sf::Event event;
@@ -38,7 +38,7 @@ int main()
         window.clear();
 
         for (int i = 0; i < objectSet.size(); i++) {
-            objectSet.at(i).update();
+            objectSet.at(i).update(objectSet.at(i).velocity);
             window.draw(objectSet.at(i).shape);
         }
         window.display();

@@ -16,9 +16,9 @@ public:
 
 	sf::CircleShape shape;
 
-	void update();
+	void update(sf::Vector2f velocity);
+	void applyForces();
 
-private:
 	int randRot;
 };
 
