@@ -24,6 +24,7 @@ public:
 	int id;
 
 	void update(sf::RenderWindow *window);
+	void constraint(sf::Vector2f vertOnePos, sf::Vector2f verTwoPos);
 
 	int randRot;
 };
