@@ -10,6 +10,8 @@ public:
 
 	static float gravity;
 	static float elasticity;
+	static float thresh;
+	static float friction;
 
 	sf::Vector2f position,
 		oldPosition,
