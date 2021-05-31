@@ -6,7 +6,10 @@
 class Sphere
 {
 public:
-	Sphere();
+	Sphere(int sizeObjectSet);
+
+	static float gravity;
+	static float elasticity;
 
 	sf::Vector2f position,
 		oldPosition,
@@ -16,8 +19,9 @@ public:
 
 	sf::CircleShape shape;
 
-	void update(sf::Vector2f velocity);
-	void applyForces();
+	int id;
+
+	void update(sf::RenderWindow *window);
 
 	int randRot;
 };

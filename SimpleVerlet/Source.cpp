@@ -15,6 +15,7 @@ int main()
     window.setFramerateLimit(60);
 
     std::vector<Sphere> objectSet;
+    int sizeObjectSet = 0;
 
     srand(1);
 
@@ -24,8 +25,8 @@ int main()
     {
         sf::Time ElapsedTime = clock.getElapsedTime();
         sf::Time drawTime = clock.getElapsedTime();
-        if (ElapsedTime.asMilliseconds() > 500 && objectSet.size() < 5) {
-            objectSet.push_back(Sphere());
+        if (ElapsedTime.asMilliseconds() > 500 && objectSet.size() < 4) {
+            objectSet.push_back(Sphere(sizeObjectSet));
         }
 
         sf::Event event;
@@ -38,7 +39,7 @@ int main()
         window.clear();
 
         for (int i = 0; i < objectSet.size(); i++) {
-            objectSet.at(i).update(objectSet.at(i).velocity);
+            objectSet.at(i).update(&window);
             window.draw(objectSet.at(i).shape);
         }
         window.display();
