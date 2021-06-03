@@ -113,6 +113,68 @@ int main()
             }
         }
 
+            // Pressing tab creates a new sphere, which flies around randomly, bouncing off the window edges.
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
+                objectSet.push_back(Sphere(sizeObjectSet));
+                sizeObjectSet++;
+            }
+
+            // Pressing space creates sticks between randomly selected vertices. The number of vertices connected is set via vertPerObject.
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (objectSet.size() >= vertPerObject) {
+                    drawSticks = (1 - drawSticks);
+                    objectSticks.clear();
+                    stickIndices.clear();
+
+                    // This part chooses the vertices randomly, checking that it doesn't select the same one twice. This could also be done via std::set of <set>, but the performance gain would be negligible (and you'd have to re-implement random ordering).
+                    while (stickIndices.size() < vertPerObject) {
+                        int chosenVert = rand() % objectSet.size();
+                        if (std::find(stickIndices.begin(), stickIndices.end(), chosenVert) == stickIndices.end()) {
+                            stickIndices.push_back(chosenVert);
+                        }
+                    }
+
+                    // Generates a stick between the vertices, whilst also connecting the last vertex on the list to the first one (so that it becomes a closed object).
+                    for (int i = 0; i < vertPerObject; i++) {
+                        int vertOne = stickIndices.at(i);
+                        int vertTwo = stickIndices.at((i + 1) % vertPerObject);
+                        objectSticks.push_back(Stick(vertOne, vertTwo, objectSet.at(vertOne).position, objectSet.at(vertTwo).position));
+                    }
+
+                }
+            }
+
+            // Pressing enter toggles the constraints imposed by the sticks. Sticks can thus be drawn without them being an actual constraint.
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter && drawSticks == true) {
+                currConstrained = (1 - currConstrained);
+            }
+
+            // Scrolling lets you zoom in and out.
+            if (event.type == sf::Event::MouseWheelMoved) {
+                view.zoom(viewZoom - zoomSpeed * event.mouseWheel.delta);
+                window.setView(sf::View(view));
+            }
+
+            // Holding the left mouse button lets you pan the view.
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                panning = true;
+                panStart.x = sf::Mouse::getPosition(window).x;
+                panStart.y = sf::Mouse::getPosition(window).y;
+            }
+
+            if (panning == true) {
+                view.move(panStart.x - sf::Mouse::getPosition(window).x, panStart.y - sf::Mouse::getPosition(window).y);
+                window.setView(sf::View(view));
+                panStart.x = sf::Mouse::getPosition(window).x;
+                panStart.y = sf::Mouse::getPosition(window).y;
+            }
+
+            // When the left mouse button is released, the loop stops tracking mouse movement and moving the view.
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+                panning = false;
+            }
+        }
+
         window.clear();
 
         // First, update all vertices
