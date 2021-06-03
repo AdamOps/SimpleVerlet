@@ -56,34 +56,15 @@ void Stick::constrainVerts(std::vector<Sphere>& objectSet, float height, float w
 	float offsetX = excessPercent * diffX;
 	float offsetY = excessPercent * diffY;
 
-	std::cout << "offsetX: " << offsetX << ", offsetY: " << offsetY << std::endl;
 	// Update the positions of the vertices and change the Verlet position storage.
 
-	if (vertOne.x + offsetX > width) {
-		offsetX = width - vertOne.x;
-	}
-	else if (vertOne.x + offsetX < 0) {
-		offsetX = -vertOne.x;
-	}
-	if (vertOne.y + offsetY > height) {
-		offsetY = height - vertOne.y;
-	}
-	else if (vertOne.y + offsetY < 0) {
-		offsetY = -vertOne.y;
-	}
-		
-		objectSet.at(idOne).oldPosition.x += offsetX;
-		objectSet.at(idOne).oldPosition.y += offsetY;
-		objectSet.at(idOne).position.x += offsetX;
-		objectSet.at(idOne).position.y += offsetY;
-		
-		objectSet.at(idTwo).oldPosition.x -= offsetX;
-		objectSet.at(idTwo).oldPosition.y -= offsetY;
-		objectSet.at(idTwo).position.x -= offsetX;
-		objectSet.at(idTwo).position.y -= offsetY;
+//	objectSet.at(idOne).oldPosition.x += offsetX;
+//	objectSet.at(idOne).oldPosition.y += offsetY;
+	objectSet.at(idOne).position.x += offsetX;
+	objectSet.at(idOne).position.y += offsetY;
 
-		objectSet.at(idOne).shape.move(offsetX, offsetY);
-		objectSet.at(idTwo).shape.move(-offsetX, -offsetY);
-
-		
+//	objectSet.at(idTwo).oldPosition.x -= offsetX;
+//	objectSet.at(idTwo).oldPosition.y -= offsetY;
+	objectSet.at(idTwo).position.x -= offsetX;
+	objectSet.at(idTwo).position.y -= offsetY;
 }

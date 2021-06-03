@@ -7,10 +7,10 @@
 #include "Sphere.h"
 
 // Static floats determining properties relevant for spheres.
-float Sphere::gravity = 0.5;
-float Sphere::elasticity = 0.50;
+float Sphere::gravity = 0.2;
+float Sphere::elasticity = 0.9;
 float Sphere::thresh = 1;
-float Sphere::friction = 1;
+float Sphere::friction = 0.999;
 
 Sphere::Sphere(int sizeObjectSet) {
 	Sphere::id = sizeObjectSet;
@@ -35,69 +35,81 @@ Sphere::Sphere(int sizeObjectSet) {
 
 }
 
-void Sphere::update(sf::RenderWindow *window) {
+void Sphere::update(sf::RenderWindow* window) {
 	// Get the window height and width, to determine whether a particle is going outside the borders.
 	float width = (*window).getSize().x;
 	float height = (*window).getSize().y;
 
 	// Floats denoting the distance to be covered in the x-direction (dx) and y-direction (dy).
-	float dx = position.x - oldPosition.x;
-	float dy = position.y - oldPosition.y + gravity;
+	float dx = (position.x - oldPosition.x)*friction;
+	float dy = (position.y - oldPosition.y)*friction;
 
+	oldPosition.x = position.x;
+	oldPosition.y = position.y;
+	position.x += dx;
+	position.y += dy;
+
+	position.y += gravity;
+
+}
+
+void Sphere::constrainPoints(sf::RenderWindow * window){
+	float width = (*window).getSize().x;
+	float height = (*window).getSize().y;
+
+	float dx = position.x - oldPosition.x;
+	float dy = position.y - oldPosition.y;
+
+	// Less accurate version, but simpler. Baseline, to test whether the rest makes sense.
+	/*
+	if (position.x > width) {
+		position.x = width;
+		oldPosition.x = position.x + dx * elasticity;
+	}
+	else if (position.x < 0) {
+		position.x = 0;
+		oldPosition.x = position.x + dx * elasticity;
+	}
+	if (position.y > height) {
+		position.y = height;
+		oldPosition.y = position.y + dy * elasticity;
+	}
+	else if (position.y < 0) {
+		position.y = 0;
+		oldPosition.y = position.y + dy * elasticity;
+	}
+	*/
+	
 	// If the particle crosses a border, there are two useful distances to track: B shows how far beyond the border the particle has gone; A shows how much it covered before reaching the border. Both the position and the oldPosition need to be adjusted based on such collisions, to set up for the subsequent frame.
 	float A, B;
-
-		if (position.x + dx > width) {
+		if (position.x > width) {
 			A = width - position.x;
-			B = position.x + dx - width;
+			B = position.x + dx * elasticity - width;
 			oldPosition.x = position.x + 2 * A;
 			position.x = width - B;
 			dx = A - B;
 		}
-		else if (position.x + dx < 0) {
+		else if (position.x < 0) {
 			A = -position.x;
-			B = dx - A;
-
+			B = dx * elasticity - A;
 			oldPosition.x = position.x + 2 * A;
 			position.x = -B;
-
 			dx = A - B;
 		}
-		else {
-			oldPosition.x = position.x;
-			position.x += dx;
-		}
 
-		if (position.y + dy > height) {
+		if (position.y > height) {
 			A = height - position.y;
-			B = position.y + dy - height - gravity;
-			
+			B = position.y + dy * elasticity - height - gravity;
 			oldPosition.y = position.y + 2 * A;
 			position.y = height - B;
-
 			dy = A - B;
 		}
-		else if (position.y + dy < 0) {
+		else if (position.y < 0) {
 			A = -position.y;
-			B = dy - A + gravity;
-
+			B = dy * elasticity - A + gravity;
 			oldPosition.y = position.y + 2 * A;
 			position.y = -B;
-
 			dy = A - B;
 		}
-		else {
-			oldPosition.y = position.y;
-			position.y += dy;
-		}
-
-		if (position.y > height - thresh && oldPosition.y > height - thresh && dy < thresh) {
-			dy = 0;
-			position.y = height;
-			oldPosition.y = height;
-			position.x = position.x + (1 - friction )* (oldPosition.x - position.x);
-			dx *= friction;
-		}
-
-	shape.move(dx, dy);
+		
 }

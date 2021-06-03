@@ -22,7 +22,6 @@ public:
 	int id;
 
 	void update(sf::RenderWindow *window);
-
-	int randRot;
+	void constrainPoints(sf::RenderWindow* window);
 };
 
