@@ -11,6 +11,7 @@
 using sf::RenderWindow;
 using sf::Vector2f;
 
+// Useful for switching between degrees and radians.
 const float Pi = 3.141592653;
 
 // Program parameters
