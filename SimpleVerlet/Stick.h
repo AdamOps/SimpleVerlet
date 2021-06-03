@@ -20,6 +20,6 @@ public:
 	int idOne, idTwo;
 
 	void update(sf::Vector2f newPosOne, sf::Vector2f newPosTwo, bool currConstrained);
-	void constrainVerts(std::vector<Sphere>& objectSet);
+	void constrainVerts(std::vector<Sphere>& objectSet, float height, float width);
 };
 

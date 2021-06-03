@@ -6,15 +6,16 @@
 
 #include "Sphere.h"
 
-float Sphere::gravity = 0.0;
+// Static floats determining properties relevant for spheres.
+float Sphere::gravity = 0.5;
 float Sphere::elasticity = 0.50;
-float Sphere::thresh = 0.5;
-float Sphere::friction = 0.995;
+float Sphere::thresh = 1;
+float Sphere::friction = 1;
 
 Sphere::Sphere(int sizeObjectSet) {
 	Sphere::id = sizeObjectSet;
 
-	Sphere::velocity.x = 0; // std::sin(rand()) * 3;
+	Sphere::velocity.x = std::sin(rand()) * 3;
 	Sphere::velocity.y = std::cos(rand()) * 3;
 
 	float dirX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
@@ -27,15 +28,11 @@ Sphere::Sphere(int sizeObjectSet) {
 	Sphere::position.x = 400 + offsetX;
 	Sphere::position.y = 300;
 
-	Sphere::randRot = rand() % 22;
-
 	Sphere::shape.setPosition(position.x, 300.0);
 	Sphere::shape.setFillColor(sf::Color::Blue);
 	Sphere::shape.setRadius(10);
 	Sphere::shape.setOrigin(10, 10);
 
-	velocity.x = velocity.x * cos(randRot) - velocity.y * sin(randRot);
-	velocity.y = velocity.x * sin(randRot) - velocity.y * cos(randRot);
 }
 
 void Sphere::update(sf::RenderWindow *window) {
@@ -47,7 +44,7 @@ void Sphere::update(sf::RenderWindow *window) {
 	float dx = position.x - oldPosition.x;
 	float dy = position.y - oldPosition.y + gravity;
 
-	// If the particle crosses a border, there are two useful distances to track: B shows how far beyond the border the particle has gone; A shows how much it covered before reaching the border.
+	// If the particle crosses a border, there are two useful distances to track: B shows how far beyond the border the particle has gone; A shows how much it covered before reaching the border. Both the position and the oldPosition need to be adjusted based on such collisions, to set up for the subsequent frame.
 	float A, B;
 
 		if (position.x + dx > width) {

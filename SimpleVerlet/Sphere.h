@@ -14,10 +14,8 @@ public:
 	static float friction;
 
 	sf::Vector2f position,
-		oldPosition,
-		velocity,
-		acceleration,
-		force;
+				oldPosition,
+				velocity;
 
 	sf::CircleShape shape;
 
