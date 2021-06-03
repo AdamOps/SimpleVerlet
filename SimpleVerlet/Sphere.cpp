@@ -6,7 +6,7 @@
 
 #include "Sphere.h"
 
-float Sphere::gravity = 2.0;
+float Sphere::gravity = 0.0;
 float Sphere::elasticity = 0.50;
 float Sphere::thresh = 0.5;
 float Sphere::friction = 0.995;
@@ -14,20 +14,22 @@ float Sphere::friction = 0.995;
 Sphere::Sphere(int sizeObjectSet) {
 	Sphere::id = sizeObjectSet;
 
-	Sphere::velocity.x = std::sin(rand()) * 30;
-	Sphere::velocity.y = std::cos(rand()) * 30;
+	Sphere::velocity.x = 0; // std::sin(rand()) * 3;
+	Sphere::velocity.y = std::cos(rand()) * 3;
 
 	float dirX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 	float dirY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
-	Sphere::oldPosition.x = 400 + (2*(dirX < 0.5) - 1)*velocity.x;
+	float offsetX = static_cast<float>(rand()) / static_cast<float>(800 / 2);
+
+	Sphere::oldPosition.x = 400 + (2*(dirX < 0.5) - 1)*velocity.x + offsetX;
 	Sphere::oldPosition.y = 300 + (2*(dirY < 0.5) - 1)*velocity.y;
-	Sphere::position.x = 400;
+	Sphere::position.x = 400 + offsetX;
 	Sphere::position.y = 300;
 
 	Sphere::randRot = rand() % 22;
 
-	Sphere::shape.setPosition(400.0, 300.0);
+	Sphere::shape.setPosition(position.x, 300.0);
 	Sphere::shape.setFillColor(sf::Color::Blue);
 	Sphere::shape.setRadius(10);
 	Sphere::shape.setOrigin(10, 10);
@@ -101,8 +103,4 @@ void Sphere::update(sf::RenderWindow *window) {
 		}
 
 	shape.move(dx, dy);
-}
-
-void Sphere::constraint(sf::Vector2f vertOnePos, sf::Vector2f vertTwoPos) {
-
 }
